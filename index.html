@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash of Clans Player Stats</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+    <style>
+        body {
+            font-family: 'VT323', monospace;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'VT323', monospace;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #playerDetails {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        #playerDetails p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="playerTag" placeholder="Enter Player Tag (e.g., #XXXXX)">
+        <button onclick="getPlayerStats()">Get Player Stats</button>
+        <div id="playerDetails"></div>
+    </div>
+
+    <script>
+        function getPlayerStats() {
+            var playerTag = document.getElementById('playerTag').value;
+            
+            // Make sure to replace 'YOUR_API_KEY' with your actual Clash of Clans API key
+            var apiKey = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjQ3NjEwMWI4LTMxYmEtNDJmYi05OTZhLWQxYTJkYTBiMmJkOCIsImlhdCI6MTcxMzM5Njg4MCwic3ViIjoiZGV2ZWxvcGVyLzM2MmRkNjlkLTQxYWYtYTlkYy0zYWQwLWEyZmNlM2Q5ZGQ1MSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjQ1Ljc5LjIxOC43OSJdLCJ0eXBlIjoiY2xpZW50In1dfQ.Btts6hBAciF73V63LR2hwHoAqB40EC0WomlxgDdxZbvf4kJ3GwXd6FnLYRzVEY88PKlOt3eZ3X1YhsCYTxTXig';
+            var url = 'https://api.clashofclans.com/v1/players/' + encodeURIComponent(playerTag.replace('#', ''));
+
+            fetch(url, {
+                headers: {
+                    'Authorization': 'Bearer ' + apiKey
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayPlayerDetails(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function displayPlayerDetails(playerData) {
+            var playerDetailsElement = document.getElementById('playerDetails');
+            playerDetailsElement.innerHTML = `
+                <p><strong>Player Name:</strong> ${playerData.name}</p>
+                <p><strong>Player Tag:</strong> ${playerData.tag}</p>
+                <p><strong>Player Level:</strong> ${playerData.expLevel}</p>
+                <p><strong>Player Trophies:</strong> ${playerData.trophies}</p>
+                <p><strong>Player Town Hall Level:</strong> ${playerData.townHallLevel}</p>
+                <p><strong>Player Clan:</strong> ${playerData.clan ? playerData.clan.name : 'N/A'}</p>
+                <!-- Add more player stats here -->
+            `;
+        }
+    </script>
+</body>
+</html>
